@@ -35,11 +35,11 @@ const test = [
 function App() {
   return (
     <div className="App">
-          <div class="background-container"> <h1>NOM DE RESTAUT</h1> </div>
+          <div className="background-container"> <h1>NOM DE RESTAUT</h1> </div>
           <div id="menu-box">
           <Menu/>
           </div>
-  <div class="content">
+  <div className="content">
   </div>
     </div>
   );
@@ -48,7 +48,7 @@ const Menu = () => {
   const [items, setitems] = useState(test);
   return (
       <div id="menu">
-          {items.map((item) => (<Item pic={item.image} name={item.name} ingredients={item.ingredients} price={item.price}/>))}
+          {items.map((item,index) => (<Item key={index} pic={item.image} name={item.name} ingredients={item.ingredients} price={item.price}/>))}
       </div>
   );
 }
