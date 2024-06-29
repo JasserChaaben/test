@@ -35,15 +35,31 @@ const test = [
   function App() {
     return (
       <div className="DashApp">
-            <div className="Dashbackground-container"> <h1 id='DashTitle'>Tableau De Bord</h1> </div>
+            <div id="right">
+            <div className="Dashbackground-container"> <h1 id='DashTitle'>Tableau De Bord</h1> 
+            <Navbar/></div>
+            
             <div id="Dashmenu-box">
             <Menu/>
+            </div>
             </div>
     <div className="Dashcontent">
     </div>
       </div>
     );
   }
+  const Navbar = () => {
+    return (
+      <div className="navbar">
+        <ul>
+          <li>Home</li><br></br>
+          <li>About</li><br></br>
+          <li>Analytique</li><br></br>
+          <li>Contact</li>
+        </ul>
+      </div>
+    );
+  };
   const Menu = () => {
     const [items, setitems] = useState(test);
     return (

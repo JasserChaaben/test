@@ -4,16 +4,61 @@
   background-color: antiquewhite;
 }
 #DashTitle{
-    color: #222;
+    color: #fff;
 }
 .Dashbackground-container {
   width: 100%;
   height: 20vh; 
+  background-color: #222;
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
 }
+
+  #right{
+        width: 100%;
+        height: 100%;
+  }
+
+  .navbar {
+    width: 75%;
+    top: 0;
+    left: 0;
+    background-color: #222;
+    overflow-x: hidden;
+    padding-top: 20px;
+    transition: width 0.3s;
+  }
+  
+  .navbar ul {
+    list-style-type: none;
+    display: flex;
+    margin: auto;
+    height: 100%;
+    width: 80%;
+    gap: 3%;
+    flex-direction: row;
+    justify-content: top;
+    padding: 0;
+  }
+  
+  .navbar ul li {
+    text-align: center;
+    height: 100%;
+    width: 100%;
+  }
+  
+  .navbar ul li  {
+    text-decoration: none;
+    color: white;
+    display: block;
+  }
+  
+  .navbar ul li:hover {
+    cursor: pointer;
+    background-color: #575757;
+  }
 h1{
   font-size: 60px;
   color: beige;
@@ -44,9 +89,12 @@ margin: auto;
   margin: auto;
   align-items: center;
   text-align: center;
+  width: 80%;
+  height: 100%;  
   gap :50px;
   padding-bottom: 50px;
-  padding-top: 10px;
+  padding-top: 20px;
+  padding-left: 20px;
 }
 #Dashpicture{
   
@@ -68,12 +116,14 @@ margin: auto;
   width: 100%;
   height: 516px;
   box-shadow: 0 0 20px 2px;
+  border-radius: 2%;
 }
 #Dashdetails{
   
   width: 100%;
   height: 200px;
   text-align: left;
+  padding-left: 1%;
 }
 #DashBtns {
   background-color: #222;
