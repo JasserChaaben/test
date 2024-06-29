@@ -34,12 +34,12 @@ const test = [
   ];
   function App() {
     return (
-      <div className="App">
-            <div className="background-container"> <h1>Tableau De Bord</h1> </div>
-            <div id="menu-box">
+      <div className="DashApp">
+            <div className="Dashbackground-container"> <h1 id='DashTitle'>Tableau De Bord</h1> </div>
+            <div id="Dashmenu-box">
             <Menu/>
             </div>
-    <div className="content">
+    <div className="Dashcontent">
     </div>
       </div>
     );
@@ -47,7 +47,7 @@ const test = [
   const Menu = () => {
     const [items, setitems] = useState(test);
     return (
-        <div id="menu">
+        <div id="Dashmenu">
             {items.map((item,index) => (<Item key={index} pic={item.image} name={item.name} ingredients={item.ingredients} price={item.price}/>))}
             <div id="addBtn" ></div>
         </div>
@@ -58,16 +58,16 @@ const test = [
   
     return (
         <div>
-          <div id="item">
-            <img id="picture" src={props.pic}></img>
-            <div id="details">
+          <div id="Dashitem">
+            <img id="Dashpicture" src={props.pic}></img>
+            <div id="Dashdetails">
             <h3>  {props.name}</h3>
             <h6> {props.ingredients}</h6>
             <h4>{props.price} </h4>
             </div>
             <div id="ItemButtons">
-            <button >Modifier</button>
-            <button >Supprimer</button>
+            <button className='DashBtns'>Modifier</button>
+            <button className='DashBtns'>Supprimer</button>
             </div>
         </div>
         </div>

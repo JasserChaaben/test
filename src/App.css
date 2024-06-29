@@ -57,6 +57,7 @@ h2,h3,h4,h5,h6{
   align-items: left;
   width: 100%;
   height: 40%;
+  box-shadow: 0 0 20px 2px;
 }
 #details{
   
