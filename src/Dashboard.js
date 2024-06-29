@@ -33,14 +33,53 @@ const test = [
     }
   ];
   function App() {
+    const [add, setAdd] = useState(false);
+    const [home, setHome] = useState(true);
+    const [analysis, setAnalysis] = useState(false);
+    const [update, setUpdate] = useState(false);
+    const [itemName,setItemName]= useState('');
+
+
+    const handleHome= () => {
+        
+        setHome(true);
+        setAnalysis(false);
+        setUpdate(false);
+        setAdd(false);
+    }
+
+    const handleAdd= () => {
+        setHome(false);
+        setAnalysis(false);
+        setUpdate(false);
+        setAdd(true);
+    }
+    
+    const handleUpdate= (event) => {
+        setHome(false);
+        setAnalysis(false);
+        setUpdate(true);
+        setAdd(false);
+        setItemName(event.target.value)
+    }
+    
+    const handleAnalyse= () => {
+        setHome(false);
+        setAnalysis(true);
+        setUpdate(false);
+        setAdd(false);
+    }
     return (
       <div className="DashApp">
             <div id="right">
             <div className="Dashbackground-container"> <h1 id='DashTitle'>Tableau De Bord</h1> 
-            <Navbar/></div>
+            <Navbar handleHome={handleHome} handleAnalyse={handleAnalyse}/></div>
             
             <div id="Dashmenu-box">
-            <Menu/>
+            {home ? <Home handleAdd={handleAdd} handleUpdate={handleUpdate}/> : null}
+            {add ? <AddItem /> : null}
+            {update ? <UpdateItem itemName={itemName}/> : null}
+            {analysis ? <Analytique /> : null}
             </div>
             </div>
     <div className="Dashcontent">
@@ -48,24 +87,24 @@ const test = [
       </div>
     );
   }
-  const Navbar = () => {
+  const Navbar = (props) => {
     return (
       <div className="navbar">
         <ul>
-          <li>Home</li><br></br>
+          <li onClick={props.handleHome}>Home</li><br></br>
+          <li onClick={props.handleAnalyse}>Analytique</li><br></br>
           <li>About</li><br></br>
-          <li>Analytique</li><br></br>
           <li>Contact</li>
         </ul>
       </div>
     );
   };
-  const Menu = () => {
+  const Home = (props) => {
     const [items, setitems] = useState(test);
     return (
         <div id="Dashmenu">
-            {items.map((item,index) => (<Item key={index} pic={item.image} name={item.name} ingredients={item.ingredients} price={item.price}/>))}
-            <div id="addBtn" ></div>
+            {items.map((item,index) => (<Item  handleUpdate={props.handleUpdate} key={index} pic={item.image} name={item.name} ingredients={item.ingredients} price={item.price}/>))}
+            <div id="addBtn" onClick={props.handleAdd}></div>
         </div>
     );
   }
@@ -82,10 +121,32 @@ const test = [
             <h4>{props.price} </h4>
             </div>
             <div id="ItemButtons">
-            <button className='DashBtns'>Modifier</button>
+            <button value={props.name} onClick={props.handleUpdate} className='DashBtns'>Modifier</button>
             <button className='DashBtns'>Supprimer</button>
             </div>
         </div>
+        </div>
+    );
+  }
+  const AddItem = ()=> {
+    return (
+        <div>
+            Add Item Later 
+        </div>
+    );
+  }
+  
+  const UpdateItem = (props)=> {
+    return (
+        <div>
+            Update {props.itemName} Later 
+        </div>
+    );
+  }
+  const Analytique = ()=> {
+    return (
+        <div>
+            Add Analytique Later 
         </div>
     );
   }
