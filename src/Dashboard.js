@@ -1,43 +1,48 @@
 import './Dashboard.css';
 import React, { useState } from 'react';
-const test = [
-    {
-      image:'./images/pizza.jpg',
-      name: 'Margherita Pizza',
-      ingredients: 'Tomato, Mozzarella, Basil',
-      price: '10DT'
-    },
-    {
-      image:'./images/salad.jpg',
-      name: 'Caesar Salad',
-      ingredients: 'Romaine, Parmesan, Croutons, Caesar Dressing',
-      price: '8,500DT'
-    },
-    {
-      image:'./images/spagetti.jpg',
-      name: 'Spaghetti Carbonara',
-      ingredients: 'Spaghetti, Eggs, Pecorino Romano, Pancetta, Pepper',
-      price: '6,500DT'
-    },
-    {
-      image:'./images/salmon.jpg',
-      name: 'Grilled Salmon',
-      ingredients: 'Salmon, Olive Oil, Lemon, Garlic, Dill',
-      price: '11,500DT'
-    },
-    {
-      image:'./images/Tiramisu.jpg',
-      name: 'Tiramisu',
-      ingredients: 'Mascarpone, Espresso, Ladyfingers, Cocoa Powder',
-      price: '7,500DT'
-    }
-  ];
+    const test = [
+        {
+        id:0,
+        image:'./images/pizza.jpg',
+        name: 'Margherita Pizza',
+        ingredients: 'Tomato, Mozzarella, Basil',
+        price: '10DT'
+        },
+        {
+        id:1,
+        image:'./images/salad.jpg',
+        name: 'Caesar Salad',
+        ingredients: 'Romaine, Parmesan, Croutons, Caesar Dressing',
+        price: '8,500DT'
+        },
+        {
+        id:2,
+        image:'./images/spagetti.jpg',
+        name: 'Spaghetti Carbonara',
+        ingredients: 'Spaghetti, Eggs, Pecorino Romano, Pancetta, Pepper',
+        price: '6,500DT'
+        },
+        {
+        id:3,
+        image:'./images/salmon.jpg',
+        name: 'Grilled Salmon',
+        ingredients: 'Salmon, Olive Oil, Lemon, Garlic, Dill',
+        price: '11,500DT'
+        },
+        {
+        id:4,
+        image:'./images/Tiramisu.jpg',
+        name: 'Tiramisu',
+        ingredients: 'Mascarpone, Espresso, Ladyfingers, Cocoa Powder',
+        price: '7,500DT'
+        }
+    ];
   function App() {
     const [add, setAdd] = useState(false);
     const [home, setHome] = useState(true);
     const [analysis, setAnalysis] = useState(false);
     const [update, setUpdate] = useState(false);
-    const [itemName,setItemName]= useState('');
+    const [itemName,setItemName]= useState([]);
 
 
     const handleHome= () => {
@@ -60,7 +65,8 @@ const test = [
         setAnalysis(false);
         setUpdate(true);
         setAdd(false);
-        setItemName(event.target.value)
+        const itemWithId2 = test.find(item => item.id == event.target.value);
+        setItemName(itemWithId2)
     }
     
     const handleAnalyse= () => {
@@ -92,8 +98,8 @@ const test = [
       <div className="navbar">
         <ul>
           <li onClick={props.handleHome}>Home</li><br></br>
+          <li>Ordres</li><br></br>
           <li onClick={props.handleAnalyse}>Analytique</li><br></br>
-          <li>About</li><br></br>
           <li>Contact</li>
         </ul>
       </div>
@@ -103,7 +109,7 @@ const test = [
     const [items, setitems] = useState(test);
     return (
         <div id="Dashmenu">
-            {items.map((item,index) => (<Item  handleUpdate={props.handleUpdate} key={index} pic={item.image} name={item.name} ingredients={item.ingredients} price={item.price}/>))}
+            {items.map((item,index) => (<Item  handleUpdate={props.handleUpdate} key={index} id={item.id} pic={item.image} name={item.name} ingredients={item.ingredients} price={item.price}/>))}
             <div id="addBtn" onClick={props.handleAdd}></div>
         </div>
     );
@@ -121,7 +127,7 @@ const test = [
             <h4>{props.price} </h4>
             </div>
             <div id="ItemButtons">
-            <button value={props.name} onClick={props.handleUpdate} className='DashBtns'>Modifier</button>
+            <button value={props.id} onClick={props.handleUpdate} className='DashBtns'>Modifier</button>
             <button className='DashBtns'>Supprimer</button>
             </div>
         </div>
@@ -129,18 +135,148 @@ const test = [
     );
   }
   const AddItem = ()=> {
+    const [formData, setFormData] = useState({
+        name: '',
+        description: '',
+        price: '',
+        picture: null,
+      });
+    
+      const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+      };
+    
+      const handleFileChange = (e) => {
+        setFormData({ ...formData, picture: e.target.files[0] });
+      };
+    
+      const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log(formData);
+        // Add form submission logic here
+      };
     return (
         <div>
-            Add Item Later 
+             
+    <form onSubmit={handleSubmit}>
+      <div>
+        <label htmlFor="name">Nom:</label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          value={formData.name}
+          onChange={handleChange}
+          required
+        />
+      </div>
+      <div>
+        <label htmlFor="description">Details:</label>
+        <textarea
+          id="description"
+          name="description"
+          value={formData.description}
+          onChange={handleChange}
+          required
+        />
+      </div>
+      <div>
+        <label htmlFor="price">Prix:</label>
+        <input
+          
+          id="price"
+          name="price"
+          value={formData.price}
+          onChange={handleChange}
+          required
+        />
+      </div>
+      <div>
+        <label htmlFor="picture">Ajouter Image:</label>
+        <input
+          type="file"
+          id="picture"
+          name="picture"
+          onChange={handleFileChange}
+          required
+        />
+      </div>
+      <button type="submit">Ajouter</button>
+    </form>
         </div>
     );
   }
   
   const UpdateItem = (props)=> {
-    return (
-        <div>
-            Update {props.itemName} Later 
-        </div>
+    const [formData, setFormData] = useState({
+    name: props.itemName.name,
+    ingredients: props.itemName.ingredients,
+    price: props.itemName.price,
+    picture: props.itemName.image,
+  });
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleFileChange = (e) => {
+    setFormData({ ...formData, picture: e.target.files[0] });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(formData);
+    // Add form submission logic here
+  };
+    return (    
+    <div>     
+        <form onSubmit={handleSubmit}>
+          <div>
+            <label htmlFor="name">Nom:</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="ingredients">Details:</label>
+            <textarea
+              id="ingredients"
+              name="ingredients"
+              value={formData.ingredients}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="price">Prix:</label>
+            <input
+              
+              id="price"
+              name="price"
+              value={formData.price}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="picture">Ajouter Image:</label>
+            <input
+              type="file"
+              id="picture"
+              name="picture"
+              onChange={handleFileChange}
+              required
+            />
+          </div>
+          <button type="submit">Modifier</button>
+        </form>
+            </div>
     );
   }
   const Analytique = ()=> {

@@ -107,6 +107,7 @@ margin: auto;
   justify-content: center;
   align-items: center; 
 }
+
 #Dashitem {
 
   display: flex;
@@ -162,3 +163,29 @@ flex-direction: row;
 align-items: center;
 gap: 50px;
 }
+form {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    margin: auto;
+  }
+  
+  div {
+    margin-bottom: 15px;
+  }
+  
+  label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: block;
+  }
+  
+  input[type="text"],
+  textarea,
+  input[type="number"] {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+  }
+  
+  
