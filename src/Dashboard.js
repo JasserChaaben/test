@@ -1,5 +1,24 @@
 import './Dashboard.css';
-import React, { useState } from 'react';
+import React, { useState,useEffect  } from 'react';
+import axios from 'axios';
+
+// Function to get the CSRF token from cookies
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.substring(0, name.length + 1) === name + '=') {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+
+const csrftoken = getCookie('csrftoken');
     const test = [
         {
         id:0,
@@ -43,14 +62,45 @@ import React, { useState } from 'react';
     const [analysis, setAnalysis] = useState(false);
     const [update, setUpdate] = useState(false);
     const [itemName,setItemName]= useState([]);
-
-
-    const handleHome= () => {
-        
+    const [menu,setMenu] = useState([]);
+   
+    const fetchMenu = async () => {
+      
+      try {
+        const response = await axios.get('http://127.0.0.1:8000/api/items/', {
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken,
+          }
+        });
+        if (response.status === 200) {
+          return response.data || test; 
+        } else {
+          console.error(`Error: ${response.status}`);
+          return  test; 
+        }
+      } catch (error) {
+        console.error('Error fetching menu:', error);
+        return  test;
+      }
+    };
+    const handleHome=  async () => {
+      try {
+        const menuData = await fetchMenu();
+        setMenu(menuData)
         setHome(true);
         setAnalysis(false);
         setUpdate(false);
         setAdd(false);
+        return menuData;
+      } catch (error) {
+        console.error('Error getting menu data:', error);
+        setHome(true);
+        setAnalysis(false);
+        setUpdate(false);
+        setAdd(false);
+        return [];
+      }
     }
 
     const handleAdd= () => {
@@ -65,7 +115,7 @@ import React, { useState } from 'react';
         setAnalysis(false);
         setUpdate(true);
         setAdd(false);
-        const itemWithId2 = test.find(item => item.id == event.target.value);
+        const itemWithId2 = menu.find(item => item.id == event.target.value);
         setItemName(itemWithId2)
     }
     
@@ -82,7 +132,7 @@ import React, { useState } from 'react';
             <Navbar handleHome={handleHome} handleAnalyse={handleAnalyse}/></div>
             
             <div id="Dashmenu-box">
-            {home ? <Home handleAdd={handleAdd} handleUpdate={handleUpdate}/> : null}
+            {home ? <Home menu={menu} handleAdd={handleAdd} handleUpdate={handleUpdate}/> : null}
             {add ? <AddItem /> : null}
             {update ? <UpdateItem itemName={itemName}/> : null}
             {analysis ? <Analytique /> : null}
@@ -106,10 +156,24 @@ import React, { useState } from 'react';
     );
   };
   const Home = (props) => {
-    const [items, setitems] = useState(test);
+    const [items, setitems] = useState(props.menu);
+  
+    useEffect(() => {
+      setitems(props.menu); // Update items whenever props.menu changes
+    }, [props.menu]); 
     return (
         <div id="Dashmenu">
-            {items.map((item,index) => (<Item  handleUpdate={props.handleUpdate} key={index} id={item.id} pic={item.image} name={item.name} ingredients={item.ingredients} price={item.price}/>))}
+              {Array.isArray(items) && items.map((item, index) => (
+        <Item
+          handleUpdate={props.handleUpdate}
+          key={index}
+          id={item.id}
+          pic={item.image}
+          name={item.name}
+          ingredients={item.ingredients}
+          price={item.price}
+        />
+      ))}
             <div id="addBtn" onClick={props.handleAdd}></div>
         </div>
     );
@@ -151,10 +215,31 @@ import React, { useState } from 'react';
         setFormData({ ...formData, picture: e.target.files[0] });
       };
     
-      const handleSubmit = (e) => {
+      const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(formData);
-        // Add form submission logic here
+        const data = new FormData();
+        data.append('name', formData.name);
+        data.append('description', formData.description);
+        data.append('price', formData.price);
+        data.append('picture', formData.picture);
+        console.log(csrftoken)
+        try {
+          const response = await axios.post('http://127.0.0.1:8000/menu/', data, {
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': csrftoken,
+            }
+          });
+    
+          if (response.status === 200) {
+            alert(response.data.message);
+          } else {
+            alert(`Error: ${response.data.error}`);
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          alert('An error occurred. Please try again.');
+        }
       };
     return (
         <div>
