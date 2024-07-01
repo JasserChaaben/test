@@ -88,19 +88,13 @@ const csrftoken = getCookie('csrftoken');
       try {
         const menuData = await fetchMenu();
         setMenu(menuData)
-        setHome(true);
-        setAnalysis(false);
-        setUpdate(false);
-        setAdd(false);
-        return menuData;
       } catch (error) {
         console.error('Error getting menu data:', error);
-        setHome(true);
-        setAnalysis(false);
-        setUpdate(false);
-        setAdd(false);
-        return [];
       }
+      setHome(true);
+      setAnalysis(false);
+      setUpdate(false);
+      setAdd(false);
     }
 
     const handleAdd= () => {
