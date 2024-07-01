@@ -236,29 +236,25 @@ const url="http://127.0.0.1:8000/"
     
       const handleSubmit = async (e) => {
         e.preventDefault();
-        const data = new FormData();
-        data.append('name', formData.name);
-        data.append('description', formData.description);
-        data.append('price', formData.price);
-        data.append('picture', formData.picture);
-        console.log(csrftoken)
+        console.log("X-CSRFToken : "+csrftoken);
         try {
-          const response = await axios.post(url+'menu/', data, {
+          const response = await axios.post(url+'menu/', formData, {
             headers: {
               'Content-Type': 'application/json',
               'X-CSRFToken': csrftoken,
             }
           });
-    
           if (response.status === 200) {
             alert(response.data.message);
           } else {
             alert(`Error: ${response.data.error}`);
           }
         } catch (error) {
+    
           console.error('Error:', error);
           alert('An error occurred. Please try again.');
         }
+        
       };
     return (
         <div>
