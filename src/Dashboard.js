@@ -69,7 +69,7 @@ const url="http://127.0.0.1:8000/"
       return () => {
         handleHome();
       };
-    });
+    },[menu]);
     const fetchMenu = async () => {
       
       try {
@@ -328,10 +328,27 @@ const url="http://127.0.0.1:8000/"
     setFormData({ ...formData, picture: e.target.files[0] });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async  (e) => {
     e.preventDefault();
-    console.log(formData);
-    // Add form submission logic here
+    try {
+      
+      console.log('trying to update item with id :', props.itemName.id);
+      
+      console.log('with data :', formData);
+
+      const response = await axios.post(`${url}menu/${props.itemName.id}/`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'X-CSRFToken': csrftoken,
+        }
+      });
+
+      console.log('Item updated successfully:', response.data);
+
+    } catch (error) {
+      console.error('Error updating item:', error);
+      alert('An error occurred while updating the item. Please try again.');
+    }
   };
     return (    
     <div>     
