@@ -1,5 +1,24 @@
 import './App.css';
-import React, { useState } from 'react';
+import React, { useState,useEffect  } from 'react';
+import axios from 'axios';
+
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.substring(0, name.length + 1) === name + '=') {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+
+const csrftoken = getCookie('csrftoken');
+const url="http://127.0.0.1:8000/"
 const test = [
   {
     id:0,
@@ -50,10 +69,45 @@ function App() {
   );
 }
 const Menu = () => {
-  const [items, setitems] = useState(test);
+  const [menu,setMenu] = useState([]);
+    useEffect(() => {
+      
+      return () => {
+        handleMenu();
+      };
+    },[menu]);
+    const fetchMenu = async () => {
+      
+      try {
+        const response = await axios.get(url+'api/items/', {
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken,
+          }
+        });
+        if (response.status === 200) {
+          return response.data || test; 
+        } else {
+          console.error(`Error: ${response.status}`);
+          return  test; 
+        }
+      } catch (error) {
+        console.error('Error fetching menu:', error);
+        return  test;
+      }
+    };
+    const handleMenu=  async () => {
+      try {
+        const menuData = await fetchMenu();
+        setMenu(menuData)
+      } catch (error) {
+        console.error('Error getting menu data:', error);
+      }
+      
+    }
   return (
       <div id="menu">
-          {items.map((item,index) => (<Item key={index} pic={item.image} name={item.name} ingredients={item.ingredients} price={item.price}/>))}
+          {menu.map((item,index) => (<Item key={index} pic={item.image} name={item.name} ingredients={item.ingredients} price={item.price}/>))}
       </div>
   );
 }
