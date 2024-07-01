@@ -19,6 +19,7 @@ function getCookie(name) {
 }
 
 const csrftoken = getCookie('csrftoken');
+const url="http://127.0.0.1:8000/"
     const test = [
         {
         id:0,
@@ -63,11 +64,16 @@ const csrftoken = getCookie('csrftoken');
     const [update, setUpdate] = useState(false);
     const [itemName,setItemName]= useState([]);
     const [menu,setMenu] = useState([]);
-   
+    useEffect(() => {
+      
+      return () => {
+        handleHome();
+      };
+    });
     const fetchMenu = async () => {
       
       try {
-        const response = await axios.get('http://127.0.0.1:8000/api/items/', {
+        const response = await axios.get(url+'api/items/', {
           headers: {
             'Content-Type': 'application/json',
             'X-CSRFToken': csrftoken,
@@ -174,7 +180,26 @@ const csrftoken = getCookie('csrftoken');
   }
   
   const Item = (props) => {
-  
+    
+    const handleDelete = async (e) => {
+      console.log("Delete item with id : "+props.id)
+      try {
+        const response = await axios.delete(`${url}menu/${props.id}/`, {
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken,
+          }
+        });
+    
+        console.log('Item deleted successfully:', response.data);
+    
+        // Optionally, trigger a callback or update state after deletion
+        // props.onDeleteSuccess(); // Call a function passed as prop
+      } catch (error) {
+        console.error('Error deleting item:', error);
+        alert('An error occurred while deleting the item. Please try again.');
+      }
+    }
     return (
         <div>
           <div id="Dashitem">
@@ -186,7 +211,7 @@ const csrftoken = getCookie('csrftoken');
             </div>
             <div id="ItemButtons">
             <button value={props.id} onClick={props.handleUpdate} className='DashBtns'>Modifier</button>
-            <button className='DashBtns'>Supprimer</button>
+            <button onClick={handleDelete} value={props.id} className='DashBtns'>Supprimer</button>
             </div>
         </div>
         </div>
@@ -218,7 +243,7 @@ const csrftoken = getCookie('csrftoken');
         data.append('picture', formData.picture);
         console.log(csrftoken)
         try {
-          const response = await axios.post('http://127.0.0.1:8000/menu/', data, {
+          const response = await axios.post(url+'menu/', data, {
             headers: {
               'Content-Type': 'application/json',
               'X-CSRFToken': csrftoken,
